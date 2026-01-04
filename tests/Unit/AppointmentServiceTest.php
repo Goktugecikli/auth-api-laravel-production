@@ -21,16 +21,14 @@ class AppointmentServiceTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-
         $this->service = app(AppointmentService::class);
 
-        // zamanı sabitle (testler deterministic olsun)
         Carbon::setTestNow(Carbon::parse('2026-01-04 12:00:00'));
     }
 
     protected function tearDown(): void
     {
-        Carbon::setTestNow(); // reset
+        Carbon::setTestNow();
         parent::tearDown();
     }
 
@@ -68,7 +66,6 @@ class AppointmentServiceTest extends TestCase
         $provider = User::factory()->create();
 
         Appointment::factory()->create([
-            'user_id'     => User::factory(), // başka bir user olabilir, önemli değil
             'provider_id' => $provider->id,
             'starts_at'   => Carbon::parse('2026-01-06 10:00:00'),
             'ends_at'     => Carbon::parse('2026-01-06 10:30:00'),
@@ -92,12 +89,10 @@ class AppointmentServiceTest extends TestCase
 
     public function test_create_does_not_conflict_when_end_equals_other_start(): void
     {
-        // [10:00 - 10:30] ve [10:30 - 11:00] çakışma sayılmamalı
         $user = User::factory()->create();
         $provider = User::factory()->create();
 
         Appointment::factory()->create([
-            'user_id'     => User::factory(),
             'provider_id' => $provider->id,
             'starts_at'   => Carbon::parse('2026-01-06 10:00:00'),
             'ends_at'     => Carbon::parse('2026-01-06 10:30:00'),
@@ -129,7 +124,6 @@ class AppointmentServiceTest extends TestCase
         ]);
 
         Appointment::factory()->create([
-            'user_id'     => User::factory(),
             'provider_id' => $provider->id,
             'starts_at'   => Carbon::parse('2026-01-06 11:00:00'),
             'ends_at'     => Carbon::parse('2026-01-06 11:30:00'),
@@ -181,9 +175,7 @@ class AppointmentServiceTest extends TestCase
 
     public function test_cancel_only_allowed_when_scheduled(): void
     {
-        $appt = Appointment::factory()->create([
-            'status' => 'cancelled',
-        ]);
+        $appt = Appointment::factory()->cancelled()->create();
 
         try {
             $this->service->cancel($appt);
@@ -195,9 +187,7 @@ class AppointmentServiceTest extends TestCase
 
     public function test_complete_only_allowed_when_scheduled(): void
     {
-        $appt = Appointment::factory()->create([
-            'status' => 'cancelled',
-        ]);
+        $appt = Appointment::factory()->cancelled()->create();
 
         try {
             $this->service->complete($appt);
@@ -209,9 +199,7 @@ class AppointmentServiceTest extends TestCase
 
     public function test_delete_not_allowed_when_completed(): void
     {
-        $appt = Appointment::factory()->create([
-            'status' => 'completed',
-        ]);
+        $appt = Appointment::factory()->completed()->create();
 
         try {
             $this->service->delete($appt);
