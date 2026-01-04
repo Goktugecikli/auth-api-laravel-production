@@ -8,6 +8,7 @@
     "require": {
         "php": "^8.2",
         "laravel/framework": "^12.0",
+        "laravel/sanctum": "^4.2",
         "laravel/tinker": "^2.10.1"
     },
     "require-dev": {
@@ -74,6 +75,7 @@
     },
     "config": {
         "optimize-autoloader": true,
+        "classmap-authoritative": true,
         "preferred-install": "dist",
         "sort-packages": true,
         "allow-plugins": {

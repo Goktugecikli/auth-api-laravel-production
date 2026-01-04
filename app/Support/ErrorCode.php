@@ -1,0 +1,20 @@
+<?php
+
+namespace App\Support;
+
+enum ErrorCode: string
+{
+    // Auth
+    case AUTH_INVALID = 'AUTH_INVALID';
+    case TOKEN_FORBIDDEN = 'TOKEN_FORBIDDEN';
+    case USER_NOT_FOUND = 'USER_NOT_FOUND';
+
+    // Validation
+    case VALIDATION_ERROR = 'VALIDATION_ERROR';
+
+    // Appointment
+    case APPOINTMENT_CONFLICT = 'APPOINTMENT_CONFLICT';
+    case APPOINTMENT_FORBIDDEN = 'APPOINTMENT_FORBIDDEN';
+    case APPOINTMENT_NOT_FOUND = 'APPOINTMENT_NOT_FOUND';
+    case APPOINTMENT_INVALID_STATUS = 'APPOINTMENT_INVALID_STATUS';
+}
